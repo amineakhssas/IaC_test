@@ -28,9 +28,9 @@ resource "azurerm_storage_container" "newcontainer1" {
 } 
 
 
-#Create Storage Account 
+# Create Storage Account 
 resource "azurerm_storage_account" "sg2" { 
- name      =  "team112" #add your team name to make it unique. Can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
+ name      =  "team11" #add your name to make it unique. Can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
  resource_group_name   =  var.rg_name
  location     =  var.location
  # Performance tier: Standard (HDD-backed)
@@ -41,18 +41,17 @@ resource "azurerm_storage_account" "sg2" {
  # Allows public access to blobs/containers
  allow_nested_items_to_be_public = true 
 } 
-
 # Create a Blob inside the Storage Account
 resource "azurerm_storage_container" "newcontainer2" { 
  name     =  "container-logs" 
  storage_account_id =  azurerm_storage_account.sg2.id
  # Access level: "blob"    = anonymous read access to blobs only
  container_access_type =  "blob" 
-}
+} 
+
 # Create MySQL Server 
 resource "azurerm_mysql_flexible_server" "serverformation1" { 
-name    =  "serverteam11" #add your team name to make it unique. Can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long.
-
+ name    =  "serverformationiac" 
 location    =  var.location 
 resource_group_name  =  var.rg_name  
 administrator_login   =  "adminformation" 
@@ -73,7 +72,6 @@ resource "azurerm_mysql_flexible_server_configuration" "ssl_config" {
   server_name         = azurerm_mysql_flexible_server.serverformation1.name
   value               = "OFF"
 }
-Afterward, add the following code to create a MySQL database and add permissive firewall rules:
 # Create MySQL database 
 resource "azurerm_mysql_flexible_database" "mysqldb1" { 
  name    =  "mysqldb1-iac" 
@@ -83,6 +81,7 @@ resource "azurerm_mysql_flexible_database" "mysqldb1" {
  collation    =  "utf8_unicode_ci" 
   depends_on = [ azurerm_mysql_flexible_server.serverformation1 ] 
 } 
+
 # Configure firewall to open access 
 resource "azurerm_mysql_flexible_server_firewall_rule" "mysqlfwrule1" { 
  name        =  "mysqlfwrule1-iac" 
